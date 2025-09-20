@@ -416,7 +416,7 @@
 
         const CONFIG = {
             token: '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', // NEW WORKING TOKEN
-            repo: 'apurv1155/qrapp',
+            repo: 'apurv1155/application',
             file: 'orders.json',
             apiBase: 'https://api.github.com',
             timeout: 25000, // 25 seconds - maximum reliability
@@ -526,7 +526,7 @@
 
                     } else if (response.status === 404) {
                         console.error('❌ Repository not found - 404 Not Found');
-                        throw new Error('Repository "apurv1155/qrapp" not found or not accessible');
+                        throw new Error('Repository "apurv1155/application" not found or not accessible');
 
                     } else if (response.status === 429) {
                         console.warn('⚠️ Rate limit exceeded - 429 Too Many Requests');
