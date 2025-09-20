@@ -1,9 +1,28 @@
 {
   "restaurant": "Bella Vista Restaurant",
   "repository": "application",
-  "lastUpdated": "2025-09-20T14:48:16.815Z",
-  "totalOrders": 1,
+  "lastUpdated": "2025-09-20T14:49:01.388Z",
+  "totalOrders": 2,
   "orders": [
+    {
+      "id": 1758379741384,
+      "orderNumber": "BV-741384",
+      "items": [
+        {
+          "id": 2,
+          "name": "Caesar Salad",
+          "price": 12.99,
+          "description": "Crisp romaine lettuce with house-made caesar dressing, croutons, and parmesan",
+          "quantity": 1
+        }
+      ],
+      "subtotal": 12.99,
+      "tax": 1.2990000000000002,
+      "total": 14.289,
+      "timestamp": "2025-09-20T14:49:01.384Z",
+      "status": "pending",
+      "repository": "application"
+    },
     {
       "id": 1758379696812,
       "orderNumber": "BV-696812",
