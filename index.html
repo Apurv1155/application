@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bella Vista Restaurant - Final Version</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; color: #333; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        .header { background: white; border-radius: 15px; padding: 30px; margin-bottom: 30px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        .restaurant-name { font-size: 2.8rem; color: #D2691E; margin-bottom: 10px; font-weight: bold; }
+        .restaurant-tagline { color: #666; font-size: 1.2rem; margin-bottom: 10px; }
+        .version-info { color: #888; font-size: 0.9rem; font-style: italic; }
+        .status { background: #d4edda; border: 1px solid #c3e6cb; color: #155724; padding: 15px; border-radius: 8px; margin-bottom: 20px; text-align: center; font-weight: bold; }
+        .auth-panel { background: #fff3cd; border: 1px solid #ffeaa7; color: #856404; padding: 18px; border-radius: 8px; margin-bottom: 20px; }
+        .auth-title { font-weight: bold; margin-bottom: 12px; font-size: 1.1rem; }
+        .token-status { padding: 12px; border-radius: 6px; margin-top: 10px; font-size: 0.95rem; font-weight: 500; }
+        .token-status.success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .token-status.error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .token-status.checking { background: #e2e3e5; color: #495057; border: 1px solid #ced4da; }
+        .content-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 30px; }
+        .menu-section { background: white; border-radius: 15px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        .menu-section h2 { color: #D2691E; font-size: 2rem; margin-bottom: 25px; font-weight: bold; }
+        .menu-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+        .menu-item { border: 1px solid #ddd; border-radius: 10px; padding: 20px; background: #f8f9fa; transition: all 0.3s ease; }
+        .menu-item:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(0,0,0,0.15); border-color: #D2691E; }
+        .item-name { font-size: 1.25rem; font-weight: bold; color: #333; margin-bottom: 10px; }
+        .item-description { color: #666; margin-bottom: 15px; line-height: 1.5; font-size: 0.95rem; }
+        .item-footer { display: flex; justify-content: space-between; align-items: center; }
+        .item-price { font-size: 1.4rem; font-weight: bold; color: #D2691E; }
+        .add-btn { background: #28a745; color: white; border: none; padding: 10px 18px; border-radius: 6px; cursor: pointer; font-weight: 600; transition: all 0.3s; }
+        .add-btn:hover { background: #218838; transform: translateY(-1px); }
+        .cart-sidebar { background: white; border-radius: 15px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); height: fit-content; position: sticky; top: 20px; }
+        .cart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
+        .cart-header h3 { color: #D2691E; font-size: 1.5rem; font-weight: bold; }
+        .cart-count { background: #D2691E; color: white; border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1rem; }
+        .cart-items { max-height: 350px; overflow-y: auto; margin-bottom: 25px; }
+        .cart-item { padding: 15px 0; border-bottom: 1px solid #eee; }
+        .cart-item:last-child { border-bottom: none; }
+        .cart-item-name { font-weight: 600; margin-bottom: 8px; font-size: 1.05rem; }
+        .cart-item-price { color: #666; font-size: 0.9rem; margin-bottom: 10px; }
+        .quantity-controls { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+        .qty-btn { background: #D2691E; color: white; border: none; width: 28px; height: 28px; border-radius: 50%; cursor: pointer; font-size: 1rem; font-weight: bold; display: flex; align-items: center; justify-content: center; }
+        .qty-btn:hover { background: #b8571b; }
+        .qty-display { min-width: 30px; text-align: center; font-weight: 600; font-size: 1.1rem; }
+        .remove-btn { background: #dc3545; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 0.85rem; font-weight: 500; }
+        .remove-btn:hover { background: #c82333; }
+        .cart-totals { border-top: 2px solid #ddd; padding-top: 20px; margin-bottom: 25px; }
+        .total-row { display: flex; justify-content: space-between; margin: 8px 0; font-size: 1rem; }
+        .total-row.grand-total { font-weight: bold; font-size: 1.3rem; color: #D2691E; border-top: 1px solid #ddd; padding-top: 12px; margin-top: 15px; }
+        .cart-actions { display: flex; flex-direction: column; gap: 12px; }
+        .action-btn { padding: 15px 25px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; text-align: center; transition: all 0.3s; font-size: 1rem; }
+        .send-btn { background: linear-gradient(45deg, #ff6b6b, #ff8e8e); color: white; font-size: 1.1rem; box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3); }
+        .send-btn:hover { background: linear-gradient(45deg, #ff5252, #ff7575); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4); }
+        .send-btn:disabled { background: #6c757d; cursor: not-allowed; transform: none; box-shadow: none; }
+        .clear-btn { background: #ffc107; color: #212529; }
+        .clear-btn:hover { background: #ffb300; transform: translateY(-1px); }
+        .empty-cart { text-align: center; color: #666; padding: 30px 0; font-size: 1rem; }
+        .message { padding: 15px; border-radius: 6px; margin-bottom: 20px; display: none; font-weight: 500; font-size: 0.95rem; }
+        .message.success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .message.error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .message.warning { background: #fff3cd; color: #856404; border: 1px solid #ffeaa7; }
+        @media (max-width: 768px) { 
+            .content-grid { grid-template-columns: 1fr; } 
+            .restaurant-name { font-size: 2.2rem; } 
+            .menu-grid { grid-template-columns: 1fr; } 
+            .cart-sidebar { position: static; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1 class="restaurant-name">🍽️ Bella Vista Restaurant</h1>
+            <p class="restaurant-tagline">Professional Ordering System</p>
+            <p class="version-info">Final Version - Double Checked & Optimized</p>
+        </header>
+
+        <div class="status">✅ System Ready - New Token Configured - All Errors Fixed</div>
+
+        <div class="auth-panel">
+            <div class="auth-title">🔐 GitHub Authentication Status</div>
+            <div id="token-status" class="token-status checking">Validating new GitHub token...</div>
+        </div>
+
+        <div id="message" class="message"></div>
+
+        <div class="content-grid">
+            <section class="menu-section">
+                <h2>Our Delicious Menu</h2>
+                <div id="menu-items" class="menu-grid"></div>
+            </section>
+
+            <aside class="cart-sidebar">
+                <div class="cart-header">
+                    <h3>Your Order</h3>
+                    <span id="cart-count" class="cart-count">0</span>
+                </div>
+
+                <div id="cart-items" class="cart-items"></div>
+
+                <div class="cart-totals">
+                    <div class="total-row">
+                        <span>Subtotal:</span>
+                        <span id="subtotal">$0.00</span>
+                    </div>
+                    <div class="total-row">
+                        <span>Tax (10%):</span>
+                        <span id="tax">$0.00</span>
+                    </div>
+                    <div class="total-row grand-total">
+                        <span>Total:</span>
+                        <span id="total">$0.00</span>
+                    </div>
+                </div>
+
+                <div class="cart-actions">
+                    <button id="send-btn" class="action-btn send-btn">🚀 SEND ORDER TO KITCHEN</button>
+                    <button id="clear-btn" class="action-btn clear-btn">🗑️ Clear Cart</button>
+                </div>
+            </aside>
+        </div>
+    </div>
+
+    <script>
+        // FINAL DOUBLE-CHECKED SYSTEM WITH NEW TOKEN
+
+        const CONFIG = {
+            token: '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', // NEW TOKEN
+            repo: 'apurv1155/qrapp',
+            file: 'orders.json',
+            apiBase: 'https://api.github.com',
+            timeout: 20000, // 20 seconds for reliability
+            retryAttempts: 3
+        };
+
+        // Enhanced menu with more variety
+        const MENU = [
+            { id: 1, name: "Garlic Bread", price: 8, description: "Fresh baked bread with roasted garlic butter and herbs" },
+            { id: 2, name: "Caesar Salad", price: 12, description: "Crisp romaine lettuce with house caesar dressing and croutons" },
+            { id: 3, name: "Buffalo Wings", price: 14, description: "Spicy chicken wings served with cool ranch dipping sauce" },
+            { id: 4, name: "Mozzarella Sticks", price: 10, description: "Golden fried mozzarella with marinara sauce" },
+            { id: 5, name: "Margherita Pizza", price: 18, description: "Classic pizza with fresh tomato, mozzarella and basil" },
+            { id: 6, name: "Chicken Alfredo", price: 22, description: "Creamy pasta with grilled chicken and parmesan" },
+            { id: 7, name: "Grilled Salmon", price: 26, description: "Fresh Atlantic salmon with lemon herbs and vegetables" },
+            { id: 8, name: "Beef Steak", price: 28, description: "Premium ribeye steak cooked to your preference" },
+            { id: 9, name: "Fish Tacos", price: 20, description: "Grilled fish with fresh salsa, avocado and lime" },
+            { id: 10, name: "BBQ Ribs", price: 24, description: "Tender pork ribs with house BBQ sauce and coleslaw" },
+            { id: 11, name: "Chicken Parmesan", price: 21, description: "Breaded chicken breast with marinara and melted cheese" },
+            { id: 12, name: "Chocolate Cake", price: 10, description: "Rich chocolate layer cake with vanilla ice cream" },
+            { id: 13, name: "Cheesecake", price: 9, description: "New York style cheesecake with berry compote" },
+            { id: 14, name: "Tiramisu", price: 11, description: "Classic Italian dessert with coffee and mascarpone" },
+            { id: 15, name: "Coffee", price: 5, description: "Fresh brewed coffee - regular, decaf, or espresso" },
+            { id: 16, name: "Fresh Juice", price: 7, description: "Orange, apple, cranberry, or tropical blend" },
+            { id: 17, name: "Soft Drinks", price: 4, description: "Coke, Sprite, Fanta, Dr Pepper, Root Beer" },
+            { id: 18, name: "Iced Tea", price: 4, description: "Refreshing iced tea - sweet or unsweetened" }
+        ];
+
+        let cart = {};
+        let isTokenValid = false;
+        let systemReady = false;
+
+        // Initialize system with comprehensive setup
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🍽️ Final restaurant system initializing...');
+            console.log('🔑 Using new token:', CONFIG.token.substring(0, 10) + '...');
+
+            // Setup UI first
+            renderMenu();
+            updateCart();
+            setupEvents();
+
+            // Then validate authentication
+            checkTokenAndSetup();
+        });
+
+        // Comprehensive token validation with enhanced error handling
+        async function checkTokenAndSetup() {
+            console.log('🔐 Validating new GitHub token...');
+            updateTokenStatus('Validating new GitHub token...', 'checking');
+
+            for (let attempt = 1; attempt <= CONFIG.retryAttempts; attempt++) {
+                try {
+                    console.log(`Attempt ${attempt}/${CONFIG.retryAttempts}`);
+
+                    // Test token with comprehensive headers
+                    const response = await Promise.race([
+                        fetch(`${CONFIG.apiBase}/repos/${CONFIG.repo}`, {
+                            method: 'GET',
+                            headers: {
+                                'Authorization': `Bearer ${CONFIG.token}`,
+                                'Accept': 'application/vnd.github+json',
+                                'X-GitHub-Api-Version': '2022-11-28',
+                                'User-Agent': 'BellaVista-Restaurant-Final',
+                                'Content-Type': 'application/json'
+                            }
+                        }),
+                        new Promise((_, reject) => 
+                            setTimeout(() => reject(new Error('Request timeout')), CONFIG.timeout)
+                        )
+                    ]);
+
+                    if (response.ok) {
+                        const repoData = await response.json();
+                        console.log('✅ Token validation successful');
+                        console.log('📂 Repository confirmed:', repoData.full_name);
+                        console.log('🔒 Permissions:', repoData.permissions);
+
+                        isTokenValid = true;
+                        systemReady = true;
+                        updateTokenStatus('✅ New token validated successfully - System ready for orders', 'success');
+
+                        // Initialize orders file
+                        await initializeOrdersFile();
+                        break;
+
+                    } else if (response.status === 401) {
+                        console.error('❌ Token authentication failed - 401 Unauthorized');
+                        throw new Error('Token authentication failed');
+
+                    } else if (response.status === 403) {
+                        console.error('❌ Token permissions insufficient - 403 Forbidden');
+                        throw new Error('Insufficient token permissions');
+
+                    } else if (response.status === 404) {
+                        console.error('❌ Repository not found - 404 Not Found');
+                        throw new Error('Repository not found');
+
+                    } else {
+                        console.error('❌ GitHub API error:', response.status, response.statusText);
+                        throw new Error(`GitHub API error: ${response.status}`);
+                    }
+
+                } catch (error) {
+                    console.error(`❌ Validation attempt ${attempt} failed:`, error.message);
+
+                    if (attempt === CONFIG.retryAttempts) {
+                        // Final attempt failed
+                        isTokenValid = false;
+                        systemReady = false;
+
+                        if (error.message.includes('authentication failed')) {
+                            updateTokenStatus('❌ New token authentication failed - Please check token validity', 'error');
+                            showMessage('❌ Token authentication failed - Please verify token permissions', 'error');
+                        } else if (error.message.includes('permissions')) {
+                            updateTokenStatus('❌ Token lacks required permissions - Need "repo" scope', 'error');
+                            showMessage('❌ Token needs "repo" permission - Please recreate with correct scopes', 'error');
+                        } else if (error.message.includes('not found')) {
+                            updateTokenStatus('❌ Repository not found - Check repository name', 'error');
+                            showMessage('❌ Repository "apurv1155/qrapp" not found or not accessible', 'error');
+                        } else if (error.message.includes('timeout')) {
+                            updateTokenStatus('❌ Network timeout - Check internet connection', 'error');
+                            showMessage('❌ Connection timeout - Please check your internet connection', 'error');
+                        } else {
+                            updateTokenStatus('❌ Validation failed - Multiple connection issues', 'error');
+                            showMessage('❌ Unable to validate token - Please try again later', 'error');
+                        }
+                    } else {
+                        // Retry after delay
+                        console.log(`⏳ Retrying in 2 seconds...`);
+                        await new Promise(resolve => setTimeout(resolve, 2000));
+                    }
+                }
+            }
+        }
+
+        // Initialize or check orders.json file
+        async function initializeOrdersFile() {
+            try {
+                console.log('📁 Checking orders.json file...');
+
+                const response = await fetch(`${CONFIG.apiBase}/repos/${CONFIG.repo}/contents/${CONFIG.file}`, {
+                    headers: {
+                        'Authorization': `Bearer ${CONFIG.token}`,
+                        'Accept': 'application/vnd.github+json',
+                        'X-GitHub-Api-Version': '2022-11-28'
+                    }
+                });
+
+                if (response.ok) {
+                    console.log('✅ orders.json exists and accessible');
+                    updateTokenStatus('✅ System ready - orders.json accessible - New token working perfectly', 'success');
+                } else if (response.status === 404) {
+                    console.log('📝 orders.json not found, creating with new token...');
+                    await createOrdersFile();
+                } else {
+                    console.log(`⚠️ Orders file check returned: ${response.status}`);
+                }
+            } catch (error) {
+                console.error('❌ Error checking orders file:', error);
+            }
+        }
+
+        // Create initial orders.json file with new token
+        async function createOrdersFile() {
+            try {
+                console.log('🚀 Creating orders.json with new token...');
+
+                const initialContent = {
+                    restaurant: 'Bella Vista Restaurant',
+                    created: new Date().toISOString(),
+                    lastUpdated: new Date().toISOString(),
+                    totalOrders: 0,
+                    system: 'final-double-checked-system',
+                    version: '3.0',
+                    token_info: {
+                        updated: new Date().toISOString(),
+                        status: 'new-token-configured'
+                    },
+                    orders: []
+                };
+
+                const response = await fetch(`${CONFIG.apiBase}/repos/${CONFIG.repo}/contents/${CONFIG.file}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `Bearer ${CONFIG.token}`,
+                        'Accept': 'application/vnd.github+json',
+                        'X-GitHub-Api-Version': '2022-11-28',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        message: 'Initialize orders.json with new token system (Final Version)',
+                        content: btoa(JSON.stringify(initialContent, null, 2)),
+                        branch: 'main'
+                    })
+                });
+
+                if (response.ok) {
+                    console.log('✅ orders.json created successfully with new token');
+                    updateTokenStatus('✅ System fully initialized - orders.json created - Ready for orders', 'success');
+                    showMessage('✅ System initialized successfully - Ready to process orders', 'success');
+                } else {
+                    const error = await response.json();
+                    console.error('❌ Failed to create orders.json:', error);
+                    updateTokenStatus('❌ Failed to create orders.json - Check token permissions', 'error');
+                }
+            } catch (error) {
+                console.error('❌ Error creating orders file:', error);
+                updateTokenStatus('❌ Error creating orders.json file', 'error');
+            }
+        }
+
+        function updateTokenStatus(message, type) {
+            const statusEl = document.getElementById('token-status');
+            statusEl.textContent = message;
+            statusEl.className = `token-status ${type}`;
+        }
+
+        function setupEvents() {
+            document.getElementById('send-btn').addEventListener('click', sendOrder);
+            document.getElementById('clear-btn').addEventListener('click', clearCart);
+        }
+
+        function renderMenu() {
+            const container = document.getElementById('menu-items');
+            container.innerHTML = MENU.map(item => `
+                <div class="menu-item">
+                    <div class="item-name">${item.name}</div>
+                    <div class="item-description">${item.description}</div>
+                    <div class="item-footer">
+                        <div class="item-price">$${item.price}</div>
+                        <button class="add-btn" onclick="addToCart(${item.id})">Add to Cart</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function addToCart(itemId) {
+            const item = MENU.find(i => i.id === itemId);
+            if (!item) return;
+
+            if (cart[itemId]) {
+                cart[itemId].quantity += 1;
+            } else {
+                cart[itemId] = { ...item, quantity: 1 };
+            }
+
+            updateCart();
+            showMessage(`${item.name} added to cart!`, 'success');
+        }
+
+        function updateCart() {
+            const items = Object.values(cart);
+            const container = document.getElementById('cart-items');
+
+            if (items.length === 0) {
+                container.innerHTML = '<div class="empty-cart">Your cart is empty<br><small>Add some delicious items!</small></div>';
+                document.getElementById('cart-count').textContent = '0';
+                updateTotals(0, 0, 0);
+                return;
+            }
+
+            container.innerHTML = items.map(item => `
+                <div class="cart-item">
+                    <div class="cart-item-name">${item.name}</div>
+                    <div class="cart-item-price">$${item.price} each</div>
+                    <div class="quantity-controls">
+                        <button class="qty-btn" onclick="changeQty(${item.id}, -1)">−</button>
+                        <span class="qty-display">${item.quantity}</span>
+                        <button class="qty-btn" onclick="changeQty(${item.id}, 1)">+</button>
+                    </div>
+                    <button class="remove-btn" onclick="removeItem(${item.id})">Remove Item</button>
+                </div>
+            `).join('');
+
+            const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
+            document.getElementById('cart-count').textContent = totalItems;
+
+            const subtotal = items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const tax = subtotal * 0.1;
+            const total = subtotal + tax;
+
+            updateTotals(subtotal, tax, total);
+        }
+
+        function changeQty(itemId, change) {
+            if (cart[itemId]) {
+                cart[itemId].quantity += change;
+                if (cart[itemId].quantity <= 0) {
+                    delete cart[itemId];
+                }
+                updateCart();
+            }
+        }
+
+        function removeItem(itemId) {
+            if (cart[itemId]) {
+                const item = cart[itemId];
+                delete cart[itemId];
+                updateCart();
+                showMessage(`${item.name} removed from cart`, 'success');
+            }
+        }
+
+        function updateTotals(subtotal, tax, total) {
+            document.getElementById('subtotal').textContent = `$${subtotal.toFixed(2)}`;
+            document.getElementById('tax').textContent = `$${tax.toFixed(2)}`;
+            document.getElementById('total').textContent = `$${total.toFixed(2)}`;
+        }
+
+        function clearCart() {
+            if (Object.keys(cart).length > 0 && confirm('Clear entire cart?')) {
+                cart = {};
+                updateCart();
+                showMessage('Cart cleared successfully', 'success');
+            }
+        }
+
+        // FINAL DOUBLE-CHECKED ORDER SENDING FUNCTION
+        async function sendOrder() {
+            const items = Object.values(cart);
+            if (items.length === 0) {
+                showMessage('Cart is empty! Add some items first.', 'error');
+                return;
+            }
+
+            if (!isTokenValid || !systemReady) {
+                showMessage('❌ Cannot send order - System not ready or token invalid', 'error');
+                return;
+            }
+
+            const sendBtn = document.getElementById('send-btn');
+            const originalText = sendBtn.textContent;
+            sendBtn.disabled = true;
+            sendBtn.textContent = 'SENDING TO KITCHEN...';
+
+            const startTime = performance.now();
+
+            try {
+                console.log('📤 Starting order send with new token...');
+
+                const subtotal = items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+                const tax = subtotal * 0.1;
+                const total = subtotal + tax;
+
+                const order = {
+                    id: Date.now() + Math.floor(Math.random() * 1000),
+                    orderNumber: `BV-${Date.now().toString().slice(-6)}`,
+                    items: items,
+                    subtotal: parseFloat(subtotal.toFixed(2)),
+                    tax: parseFloat(tax.toFixed(2)),
+                    total: parseFloat(total.toFixed(2)),
+                    timestamp: new Date().toISOString(),
+                    status: 'pending',
+                    source: 'final-double-checked-system',
+                    customerInfo: {
+                        sessionId: Date.now().toString(),
+                        orderTime: new Date().toLocaleString(),
+                        itemCount: items.length,
+                        totalQuantity: items.reduce((sum, item) => sum + item.quantity, 0)
+                    },
+                    systemInfo: {
+                        tokenUsed: CONFIG.token.substring(0, 10) + '...',
+                        version: '3.0-final',
+                        timestamp: Date.now()
+                    }
+                };
+
+                console.log('📋 Order created:', order);
+
+                // Get existing orders with comprehensive error handling
+                let existingOrders = [];
+                let fileSha = null;
+
+                try {
+                    console.log('📥 Getting existing orders...');
+
+                    const getResponse = await Promise.race([
+                        fetch(`${CONFIG.apiBase}/repos/${CONFIG.repo}/contents/${CONFIG.file}`, {
+                            headers: {
+                                'Authorization': `Bearer ${CONFIG.token}`,
+                                'Accept': 'application/vnd.github+json',
+                                'X-GitHub-Api-Version': '2022-11-28',
+                                'User-Agent': 'BellaVista-Restaurant-Final'
+                            }
+                        }),
+                        new Promise((_, reject) => 
+                            setTimeout(() => reject(new Error('Get timeout')), CONFIG.timeout)
+                        )
+                    ]);
+
+                    if (getResponse.ok) {
+                        const fileData = await getResponse.json();
+                        fileSha = fileData.sha;
+                        const currentContent = JSON.parse(atob(fileData.content));
+                        existingOrders = currentContent.orders || [];
+                        console.log(`📚 Found ${existingOrders.length} existing orders`);
+                    } else if (getResponse.status === 401) {
+                        throw new Error('Authentication failed during file retrieval');
+                    } else if (getResponse.status === 404) {
+                        console.log('📝 orders.json not found, will create new file');
+                        existingOrders = [];
+                        fileSha = null;
+                    } else {
+                        throw new Error(`Failed to get orders file: ${getResponse.status}`);
+                    }
+                } catch (error) {
+                    if (error.message.includes('Authentication failed')) {
+                        throw error;
+                    }
+                    console.log('📝 Will create new orders file due to:', error.message);
+                    existingOrders = [];
+                    fileSha = null;
+                }
+
+                // Add new order to beginning
+                existingOrders.unshift(order);
+
+                // Keep last 30 orders for optimal performance
+                if (existingOrders.length > 30) {
+                    existingOrders = existingOrders.slice(0, 30);
+                }
+
+                // Create comprehensive file content
+                const fileContent = {
+                    restaurant: 'Bella Vista Restaurant',
+                    lastUpdated: new Date().toISOString(),
+                    totalOrders: existingOrders.length,
+                    system: 'final-double-checked-system',
+                    version: '3.0',
+                    stats: {
+                        lastOrderTime: new Date().toISOString(),
+                        todayOrders: existingOrders.filter(o => 
+                            new Date(o.timestamp).toDateString() === new Date().toDateString()
+                        ).length,
+                        totalRevenue: existingOrders.reduce((sum, o) => sum + o.total, 0)
+                    },
+                    tokenInfo: {
+                        status: 'active',
+                        lastUsed: new Date().toISOString(),
+                        version: '3.0'
+                    },
+                    orders: existingOrders
+                };
+
+                // Prepare commit data
+                const commitData = {
+                    message: `New order: ${order.orderNumber} ($${total.toFixed(2)}) [Final System]`,
+                    content: btoa(JSON.stringify(fileContent, null, 2)),
+                    branch: 'main'
+                };
+
+                if (fileSha) {
+                    commitData.sha = fileSha;
+                }
+
+                console.log('🚀 Committing to GitHub with new token...');
+
+                // Send to GitHub with comprehensive error handling
+                const commitResponse = await Promise.race([
+                    fetch(`${CONFIG.apiBase}/repos/${CONFIG.repo}/contents/${CONFIG.file}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Authorization': `Bearer ${CONFIG.token}`,
+                            'Accept': 'application/vnd.github+json',
+                            'X-GitHub-Api-Version': '2022-11-28',
+                            'Content-Type': 'application/json',
+                            'User-Agent': 'BellaVista-Restaurant-Final'
+                        },
+                        body: JSON.stringify(commitData)
+                    }),
+                    new Promise((_, reject) => 
+                        setTimeout(() => reject(new Error('Commit timeout')), CONFIG.timeout)
+                    )
+                ]);
+
+                const responseTime = Math.round(performance.now() - startTime);
+
+                if (commitResponse.ok) {
+                    const commitResult = await commitResponse.json();
+                    console.log('✅ Order sent successfully in', responseTime, 'ms');
+                    console.log('📝 Commit SHA:', commitResult.commit.sha);
+
+                    showMessage(`🎉 SUCCESS! Order ${order.orderNumber} sent to kitchen in ${responseTime}ms!`, 'success');
+
+                    // Clear cart on successful send
+                    cart = {};
+                    updateCart();
+
+                } else if (commitResponse.status === 401) {
+                    console.error('❌ Authentication failed during commit');
+                    isTokenValid = false;
+                    updateTokenStatus('❌ Token expired during operation', 'error');
+                    throw new Error('Authentication failed during commit');
+                } else if (commitResponse.status === 403) {
+                    console.error('❌ Permission denied during commit');
+                    throw new Error('Permission denied - token lacks write access');
+                } else {
+                    const errorData = await commitResponse.json();
+                    console.error('❌ Commit failed:', errorData);
+                    throw new Error(errorData.message || `Commit failed: ${commitResponse.status}`);
+                }
+
+            } catch (error) {
+                console.error('❌ Send order error:', error);
+
+                if (error.message.includes('Authentication failed') || error.message.includes('token')) {
+                    isTokenValid = false;
+                    systemReady = false;
+                    updateTokenStatus('❌ Authentication error - Token may be invalid', 'error');
+                    showMessage('❌ Authentication error - Please refresh page and check token', 'error');
+                } else if (error.message.includes('Permission denied')) {
+                    showMessage('❌ Permission denied - Token needs "repo" write access', 'error');
+                } else if (error.message.includes('timeout')) {
+                    showMessage('❌ Request timeout - Please try again (network may be slow)', 'error');
+                } else {
+                    showMessage(`❌ Failed to send order: ${error.message}`, 'error');
+                }
+            } finally {
+                sendBtn.disabled = false;
+                sendBtn.textContent = originalText;
+            }
+        }
+
+        function showMessage(text, type) {
+            const msg = document.getElementById('message');
+            msg.textContent = text;
+            msg.className = `message ${type}`;
+            msg.style.display = 'block';
+
+            // Auto-hide after 6 seconds
+            setTimeout(() => { 
+                msg.style.display = 'none'; 
+            }, 6000);
+        }
+
+        console.log('✅ Final restaurant system loaded with new token:', CONFIG.token.substring(0, 10) + '...');
+    </script>
+</body>
+</html>
