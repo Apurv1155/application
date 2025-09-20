@@ -1,0 +1,1439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bella Vista Kitchen - Ultimate Version</title>
+    <meta name="robots" content="noindex, nofollow">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background: linear-gradient(135deg, #2C5F2D 0%, #97BC62 100%); 
+            min-height: 100vh; 
+            color: #333; 
+            line-height: 1.4;
+        }
+        .container { max-width: 1400px; margin: 0 auto; padding: 20px; }
+        .header { 
+            background: white; 
+            border-radius: 15px; 
+            padding: 30px; 
+            margin-bottom: 30px; 
+            text-align: center; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1); 
+        }
+        .kitchen-title { 
+            font-size: 2.8rem; 
+            color: #2C5F2D; 
+            margin-bottom: 10px; 
+            font-weight: bold; 
+        }
+        .kitchen-subtitle { 
+            color: #666; 
+            font-size: 1.2rem; 
+            margin-bottom: 8px; 
+        }
+        .version-info { 
+            color: #888; 
+            font-size: 0.9rem; 
+            font-style: italic; 
+        }
+        .status { 
+            background: #d4edda; 
+            border: 1px solid #c3e6cb; 
+            color: #155724; 
+            padding: 15px; 
+            border-radius: 8px; 
+            margin-bottom: 20px; 
+            text-align: center; 
+            font-weight: bold; 
+        }
+        .auth-panel { 
+            background: #fff3cd; 
+            border: 1px solid #ffeaa7; 
+            color: #856404; 
+            padding: 18px; 
+            border-radius: 8px; 
+            margin-bottom: 20px; 
+        }
+        .auth-title { 
+            font-weight: bold; 
+            margin-bottom: 12px; 
+            font-size: 1.1rem; 
+        }
+        .token-status { 
+            padding: 12px; 
+            border-radius: 6px; 
+            margin-top: 10px; 
+            font-size: 0.95rem; 
+            font-weight: 500; 
+        }
+        .token-status.success { 
+            background: #d4edda; 
+            color: #155724; 
+            border: 1px solid #c3e6cb; 
+        }
+        .token-status.error { 
+            background: #f8d7da; 
+            color: #721c24; 
+            border: 1px solid #f5c6cb; 
+        }
+        .token-status.checking { 
+            background: #e2e3e5; 
+            color: #495057; 
+            border: 1px solid #ced4da; 
+        }
+        .controls { 
+            background: white; 
+            padding: 25px; 
+            border-radius: 15px; 
+            margin-bottom: 25px; 
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1); 
+        }
+        .controls h3 { 
+            color: #2C5F2D; 
+            margin-bottom: 20px; 
+            font-size: 1.3rem; 
+            font-weight: bold; 
+        }
+        .control-buttons { 
+            display: flex; 
+            gap: 12px; 
+            flex-wrap: wrap; 
+        }
+        .control-btn { 
+            background: #17a2b8; 
+            color: white; 
+            border: none; 
+            padding: 12px 18px; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            font-weight: 600; 
+            transition: all 0.3s; 
+            font-size: 0.95rem; 
+        }
+        .control-btn:hover { 
+            background: #138496; 
+            transform: translateY(-1px); 
+        }
+        .control-btn:disabled { 
+            background: #6c757d; 
+            cursor: not-allowed; 
+            transform: none; 
+        }
+        .control-btn.success { 
+            background: #28a745; 
+        }
+        .control-btn.success:hover { 
+            background: #218838; 
+        }
+        .control-btn.danger { 
+            background: #dc3545; 
+        }
+        .control-btn.danger:hover { 
+            background: #c82333; 
+        }
+        .stats { 
+            background: white; 
+            padding: 25px; 
+            border-radius: 15px; 
+            margin-bottom: 25px; 
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1); 
+        }
+        .stats h3 { 
+            color: #2C5F2D; 
+            margin-bottom: 20px; 
+            font-size: 1.3rem; 
+            font-weight: bold; 
+        }
+        .stats-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); 
+            gap: 20px; 
+        }
+        .stat-item { 
+            background: #f8f9fa; 
+            padding: 20px; 
+            border-radius: 10px; 
+            text-align: center; 
+            transition: all 0.3s; 
+        }
+        .stat-item:hover { 
+            background: #e9ecef; 
+            transform: translateY(-2px); 
+        }
+        .stat-value { 
+            font-size: 1.8rem; 
+            font-weight: bold; 
+            color: #2C5F2D; 
+        }
+        .stat-label { 
+            font-size: 0.85rem; 
+            color: #666; 
+            margin-top: 8px; 
+            font-weight: 500; 
+        }
+        .orders-section { 
+            background: white; 
+            border-radius: 15px; 
+            padding: 30px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1); 
+        }
+        .section-title { 
+            font-size: 2rem; 
+            color: #2C5F2D; 
+            margin-bottom: 25px; 
+            font-weight: bold; 
+        }
+        .orders-grid { 
+            display: grid; 
+            gap: 20px; 
+        }
+        .order-card { 
+            border: 2px solid #ddd; 
+            border-radius: 12px; 
+            padding: 25px; 
+            background: #f8f9fa; 
+            transition: all 0.3s ease; 
+        }
+        .order-card:hover { 
+            transform: translateY(-3px); 
+            box-shadow: 0 12px 35px rgba(0,0,0,0.15); 
+        }
+        .order-card.new { 
+            border-color: #28a745; 
+            background: linear-gradient(145deg, #e8f5e8, #f8f9fa); 
+            animation: newOrderPulse 4s ease-out; 
+        }
+        .order-card.removing { 
+            opacity: 0.6; 
+            background: #ffebee; 
+            border-color: #dc3545; 
+        }
+        @keyframes newOrderPulse { 
+            0% { 
+                transform: scale(1.03); 
+                border-color: #28a745; 
+                background: #e8f5e8; 
+                box-shadow: 0 0 20px rgba(40, 167, 69, 0.4);
+            } 
+            25% { 
+                transform: scale(1.02); 
+                border-color: #20c997; 
+            }
+            50% { 
+                transform: scale(1.01); 
+                border-color: #28a745; 
+            }
+            100% { 
+                transform: scale(1); 
+                border-color: #ddd; 
+                background: #f8f9fa; 
+                box-shadow: none;
+            } 
+        }
+        .order-header { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            margin-bottom: 20px; 
+        }
+        .order-number { 
+            font-weight: bold; 
+            font-size: 1.3rem; 
+            color: #2C5F2D; 
+        }
+        .order-time { 
+            font-size: 0.9rem; 
+            color: #666; 
+            text-align: right; 
+        }
+        .order-items { 
+            margin-bottom: 20px; 
+        }
+        .order-item { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            padding: 12px 0; 
+            border-bottom: 1px solid #eee; 
+        }
+        .order-item:last-child { 
+            border-bottom: none; 
+        }
+        .item-info { 
+            flex: 1; 
+        }
+        .item-name { 
+            font-weight: 600; 
+            color: #333; 
+            font-size: 1.05rem; 
+        }
+        .item-details { 
+            color: #666; 
+            font-size: 0.9rem; 
+            margin-top: 4px; 
+        }
+        .item-total { 
+            color: #2C5F2D; 
+            font-weight: 700; 
+            font-size: 1.1rem; 
+        }
+        .order-total { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            margin: 20px 0; 
+            padding-top: 15px; 
+            border-top: 2px solid #ddd; 
+        }
+        .total-label { 
+            font-size: 1.2rem; 
+            font-weight: 600; 
+        }
+        .total-amount { 
+            font-weight: bold; 
+            font-size: 1.6rem; 
+            color: #2C5F2D; 
+        }
+        .order-actions { 
+            display: flex; 
+            gap: 12px; 
+            flex-wrap: wrap; 
+            justify-content: flex-start; 
+        }
+        .status-btn { 
+            padding: 10px 16px; 
+            border: none; 
+            border-radius: 6px; 
+            cursor: pointer; 
+            font-weight: 700; 
+            font-size: 0.85rem; 
+            text-transform: uppercase; 
+            letter-spacing: 0.5px; 
+        }
+        .status-pending { 
+            background: #ffc107; 
+            color: #212529; 
+        }
+        .status-preparing { 
+            background: #17a2b8; 
+            color: white; 
+        }
+        .status-ready { 
+            background: #28a745; 
+            color: white; 
+        }
+        .status-completed { 
+            background: #6c757d; 
+            color: white; 
+        }
+        .action-btn { 
+            padding: 10px 16px; 
+            border: none; 
+            border-radius: 6px; 
+            cursor: pointer; 
+            font-weight: 600; 
+            font-size: 0.85rem; 
+            color: white; 
+            transition: all 0.3s; 
+        }
+        .action-btn:hover { 
+            transform: translateY(-1px); 
+        }
+        .action-btn.primary { 
+            background: #007bff; 
+        }
+        .action-btn.primary:hover { 
+            background: #0056b3; 
+        }
+        .action-btn.success { 
+            background: #28a745; 
+        }
+        .action-btn.success:hover { 
+            background: #1e7e34; 
+        }
+        .action-btn.danger { 
+            background: #dc3545; 
+        }
+        .action-btn.danger:hover { 
+            background: #bd2130; 
+        }
+        .action-btn:disabled { 
+            background: #6c757d; 
+            cursor: not-allowed; 
+            transform: none; 
+        }
+        .empty-state { 
+            text-align: center; 
+            padding: 80px 20px; 
+            color: #666; 
+        }
+        .empty-icon { 
+            font-size: 4rem; 
+            margin-bottom: 20px; 
+            opacity: 0.7; 
+        }
+        .empty-title { 
+            font-size: 1.8rem; 
+            font-weight: 600; 
+            margin-bottom: 15px; 
+        }
+        .empty-description { 
+            font-size: 1.1rem; 
+            line-height: 1.6; 
+        }
+        .message { 
+            padding: 15px 20px; 
+            border-radius: 8px; 
+            margin-bottom: 20px; 
+            display: none; 
+            font-weight: 500; 
+            font-size: 0.95rem; 
+        }
+        .message.success { 
+            background: #d4edda; 
+            color: #155724; 
+            border: 1px solid #c3e6cb; 
+        }
+        .message.error { 
+            background: #f8d7da; 
+            color: #721c24; 
+            border: 1px solid #f5c6cb; 
+        }
+        .message.warning { 
+            background: #fff3cd; 
+            color: #856404; 
+            border: 1px solid #ffeaa7; 
+        }
+        .new-alert { 
+            position: fixed; 
+            top: 20px; 
+            right: 20px; 
+            background: linear-gradient(145deg, #28a745, #20c997); 
+            color: white; 
+            padding: 20px 26px; 
+            border-radius: 12px; 
+            z-index: 1000; 
+            animation: slideInAlert 0.6s ease-out; 
+            box-shadow: 0 10px 30px rgba(40, 167, 69, 0.4); 
+        }
+        @keyframes slideInAlert { 
+            from { 
+                transform: translateX(100%) scale(0.8); 
+                opacity: 0; 
+            } 
+            to { 
+                transform: translateX(0) scale(1); 
+                opacity: 1; 
+            } 
+        }
+        .json-info { 
+            background: linear-gradient(145deg, #e7f3ff, #f8f9fa); 
+            border: 1px solid #b8d4fd; 
+            color: #004085; 
+            padding: 20px; 
+            border-radius: 10px; 
+            margin-bottom: 25px; 
+        }
+        .json-info-title { 
+            font-weight: bold; 
+            margin-bottom: 10px; 
+            font-size: 1.05rem; 
+        }
+        @media (max-width: 768px) { 
+            .container { 
+                padding: 15px; 
+            } 
+            .header { 
+                padding: 25px; 
+            } 
+            .kitchen-title { 
+                font-size: 2.2rem; 
+            } 
+            .control-buttons, .order-actions { 
+                justify-content: center; 
+            } 
+            .stats-grid { 
+                grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); 
+                gap: 15px; 
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1 class="kitchen-title">🍳 Bella Vista Kitchen</h1>
+            <p class="kitchen-subtitle">Ultimate Professional Order Management</p>
+            <p class="version-info">Version 4.0 - Triple Checked & Bulletproof</p>
+        </header>
+
+        <div class="status">✅ Kitchen Ultimate - New Token Active - All Systems Operational</div>
+
+        <div class="auth-panel">
+            <div class="auth-title">🔐 GitHub Authentication Status</div>
+            <div id="token-status" class="token-status checking">Validating new GitHub token...</div>
+        </div>
+
+        <div class="json-info">
+            <div class="json-info-title">📁 Ultimate JSON Processing System</div>
+            <div>New token active • Enhanced monitoring • Real deletion • Advanced error recovery • Performance optimization</div>
+        </div>
+
+        <div class="controls">
+            <h3>Kitchen Control Center</h3>
+            <div class="control-buttons">
+                <button class="control-btn success" onclick="fetchOrdersWithRetry()" id="refresh-btn">🔄 Refresh Orders</button>
+                <button class="control-btn" onclick="toggleAutoMonitoring()" id="auto-btn">⏸️ Auto: ON</button>
+                <button class="control-btn" onclick="markAllAsRead()">👁️ Mark All Read</button>
+                <button class="control-btn" onclick="testSystemConnection()">🔧 Test System</button>
+                <button class="control-btn danger" onclick="clearLocalDisplay()">🗑️ Clear Display</button>
+            </div>
+        </div>
+
+        <div class="stats">
+            <h3>Kitchen Performance Metrics</h3>
+            <div class="stats-grid">
+                <div class="stat-item"><div class="stat-value" id="total-orders">0</div><div class="stat-label">Total Orders</div></div>
+                <div class="stat-item"><div class="stat-value" id="active-orders">0</div><div class="stat-label">Active Orders</div></div>
+                <div class="stat-item"><div class="stat-value" id="completed-orders">0</div><div class="stat-label">Completed</div></div>
+                <div class="stat-item"><div class="stat-value" id="removed-orders">0</div><div class="stat-label">Removed</div></div>
+                <div class="stat-item"><div class="stat-value" id="fetch-count">0</div><div class="stat-label">Fetch Count</div></div>
+                <div class="stat-item"><div class="stat-value" id="success-rate">100%</div><div class="stat-label">Success Rate</div></div>
+                <div class="stat-item"><div class="stat-value" id="avg-response">0ms</div><div class="stat-label">Avg Response</div></div>
+            </div>
+        </div>
+
+        <div id="message" class="message"></div>
+
+        <div class="orders-section">
+            <h2 class="section-title">Kitchen Order Queue</h2>
+            <div id="orders-grid" class="orders-grid">
+                <div class="empty-state">
+                    <div class="empty-icon">🍳</div>
+                    <h3 class="empty-title">Kitchen Ready & Monitoring</h3>
+                    <p class="empty-description">
+                        Ultimate system monitoring for orders with enhanced token...<br>
+                        <small>Real-time monitoring • Enhanced alerts • Bulletproof deletion • Performance optimized</small>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ULTIMATE TRIPLE-CHECKED KITCHEN SYSTEM WITH NEW TOKEN
+
+        const CONFIG = {
+            token: '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', // NEW WORKING TOKEN
+            repo: 'apurv1155/qrapp',
+            file: 'orders.json',
+            rawBase: 'https://raw.githubusercontent.com',
+            apiBase: 'https://api.github.com',
+            timeout: 25000, // 25 seconds - maximum reliability
+            retryAttempts: 5, // 5 attempts for ultimate reliability
+            retryDelay: 2000, // 2 second base delay
+            pollInterval: 3500 // 3.5 seconds - optimal for real-time without rate limiting
+        };
+
+        let orders = [];
+        let isAutoMonitoring = true;
+        let autoInterval = null;
+        let seenOrderIds = new Set();
+        let isTokenValid = false;
+        let systemReady = false;
+        let authRetryCount = 0;
+        let stats = {
+            completed: 0,
+            removed: 0,
+            fetchCount: 0,
+            successfulFetches: 0,
+            failedFetches: 0,
+            responseTimes: []
+        };
+
+        // Initialize ultimate kitchen system
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🍳 Ultimate kitchen system initializing...');
+            console.log('🔑 Using new token:', CONFIG.token.substring(0, 12) + '...');
+            console.log('⚙️ System configuration:', {
+                timeout: CONFIG.timeout + 'ms',
+                retries: CONFIG.retryAttempts,
+                polling: CONFIG.pollInterval + 'ms',
+                version: '4.0'
+            });
+
+            loadPersistedStats();
+            validateTokenWithEnhancedRetry();
+        });
+
+        // Ultimate token validation with comprehensive retry and error handling
+        async function validateTokenWithEnhancedRetry() {
+            console.log('🔐 Starting comprehensive token validation...');
+            updateTokenStatus('Validating new GitHub token...', 'checking');
+
+            for (let attempt = 1; attempt <= CONFIG.retryAttempts; attempt++) {
+                try {
+                    console.log(`🔍 Token validation attempt ${attempt}/${CONFIG.retryAttempts}`);
+
+                    const response = await Promise.race([
+                        fetch(`${CONFIG.apiBase}/repos/${CONFIG.repo}`, {
+                            method: 'GET',
+                            headers: {
+                                'Authorization': `Bearer ${CONFIG.token}`,
+                                'Accept': 'application/vnd.github+json',
+                                'X-GitHub-Api-Version': '2022-11-28',
+                                'User-Agent': 'BellaVista-Kitchen-Ultimate-v4',
+                                'Content-Type': 'application/json',
+                                'Cache-Control': 'no-cache'
+                            }
+                        }),
+                        new Promise((_, reject) => 
+                            setTimeout(() => reject(new Error('Token validation timeout')), CONFIG.timeout)
+                        )
+                    ]);
+
+                    if (response.ok) {
+                        const repoData = await response.json();
+                        console.log('✅ Token validation successful!');
+                        console.log('📂 Repository verified:', repoData.full_name);
+                        console.log('🔒 Permissions verified:', repoData.permissions);
+                        console.log('👤 Owner verified:', repoData.owner.login);
+                        console.log('🌐 Repository type:', repoData.private ? 'Private' : 'Public');
+                        console.log('📅 Last updated:', repoData.updated_at);
+
+                        isTokenValid = true;
+                        systemReady = true;
+                        authRetryCount = 0;
+
+                        updateTokenStatus('✅ New token validated successfully - Kitchen fully operational', 'success');
+
+                        // Enable all controls
+                        document.getElementById('refresh-btn').disabled = false;
+
+                        // Start comprehensive monitoring
+                        await fetchOrdersWithRetry();
+                        startEnhancedMonitoring();
+                        break;
+
+                    } else if (response.status === 401) {
+                        console.error('❌ Token authentication failed - 401 Unauthorized');
+                        throw new Error('Token authentication failed - Invalid or expired token');
+
+                    } else if (response.status === 403) {
+                        console.error('❌ Token permissions insufficient - 403 Forbidden');
+                        throw new Error('Token lacks required permissions - Need "repo" scope');
+
+                    } else if (response.status === 404) {
+                        console.error('❌ Repository not found - 404 Not Found');
+                        throw new Error('Repository "apurv1155/qrapp" not found or not accessible');
+
+                    } else if (response.status === 429) {
+                        console.warn('⚠️ Rate limit exceeded - 429 Too Many Requests');
+                        throw new Error('Rate limit exceeded - Will retry with exponential backoff');
+
+                    } else {
+                        console.error('❌ GitHub API error:', response.status, response.statusText);
+                        throw new Error(`GitHub API error: ${response.status} ${response.statusText}`);
+                    }
+
+                } catch (error) {
+                    console.error(`❌ Validation attempt ${attempt} failed:`, error.message);
+                    authRetryCount++;
+
+                    if (attempt === CONFIG.retryAttempts) {
+                        // Final attempt failed - comprehensive error reporting
+                        isTokenValid = false;
+                        systemReady = false;
+
+                        if (error.message.includes('authentication failed') || error.message.includes('Invalid or expired')) {
+                            updateTokenStatus('❌ Token authentication failed - Please verify new token', 'error');
+                            showMessage('❌ Token authentication failed - Please check if new token is valid and active', 'error');
+                        } else if (error.message.includes('permissions') || error.message.includes('scope')) {
+                            updateTokenStatus('❌ Token lacks required permissions - Need "repo" scope', 'error');
+                            showMessage('❌ Token needs "repo" permission - Please recreate with proper scopes', 'error');
+                        } else if (error.message.includes('not found') || error.message.includes('not accessible')) {
+                            updateTokenStatus('❌ Repository not accessible - Check name and permissions', 'error');
+                            showMessage('❌ Repository "apurv1155/qrapp" not found - Please verify it exists and is accessible', 'error');
+                        } else if (error.message.includes('Rate limit')) {
+                            updateTokenStatus('❌ Rate limit exceeded - GitHub API overloaded', 'error');
+                            showMessage('❌ GitHub rate limit exceeded - Please wait and refresh', 'error');
+                        } else if (error.message.includes('timeout')) {
+                            updateTokenStatus('❌ Network timeout - Check internet connection', 'error');
+                            showMessage('❌ Connection timeout - Please check internet and try again', 'error');
+                        } else {
+                            updateTokenStatus('❌ Validation failed - Multiple system issues', 'error');
+                            showMessage('❌ Unable to validate token - System issues detected', 'error');
+                        }
+
+                        // Disable controls that require authentication
+                        document.getElementById('refresh-btn').disabled = true;
+                    } else {
+                        // Calculate delay with exponential backoff for better handling
+                        const baseDelay = error.message.includes('Rate limit') ? 
+                            CONFIG.retryDelay * Math.pow(2, attempt) : 
+                            CONFIG.retryDelay * attempt;
+
+                        console.log(`⏳ Retrying token validation in ${baseDelay}ms...`);
+                        updateTokenStatus(`🔄 Retrying validation... (${attempt}/${CONFIG.retryAttempts})`, 'checking');
+                        await new Promise(resolve => setTimeout(resolve, baseDelay));
+                    }
+                }
+            }
+        }
+
+        function updateTokenStatus(message, type) {
+            const statusEl = document.getElementById('token-status');
+            if (statusEl) {
+                statusEl.textContent = message;
+                statusEl.className = `token-status ${type}`;
+            }
+        }
+
+        function loadPersistedStats() {
+            try {
+                const saved = localStorage.getItem('ultimateKitchenStats');
+                if (saved) {
+                    stats = { ...stats, ...JSON.parse(saved) };
+                }
+            } catch (error) {
+                console.warn('Could not load persisted stats:', error);
+            }
+            updateStatsDisplay();
+        }
+
+        function savePersistedStats() {
+            try {
+                localStorage.setItem('ultimateKitchenStats', JSON.stringify(stats));
+            } catch (error) {
+                console.warn('Could not save stats:', error);
+            }
+            updateStatsDisplay();
+        }
+
+        function startEnhancedMonitoring() {
+            if (autoInterval) clearInterval(autoInterval);
+
+            autoInterval = setInterval(() => {
+                if (isAutoMonitoring && isTokenValid && systemReady) {
+                    fetchOrdersWithRetry();
+                }
+            }, CONFIG.pollInterval);
+
+            console.log(`🔄 Enhanced monitoring started (every ${CONFIG.pollInterval}ms)`);
+        }
+
+        // ULTIMATE ORDER FETCHING with comprehensive retry and error handling
+        async function fetchOrdersWithRetry() {
+            if (!isTokenValid || !systemReady) {
+                console.log('⚠️ Skipping fetch - system not ready');
+                return;
+            }
+
+            stats.fetchCount++;
+            const startTime = performance.now();
+
+            for (let attempt = 1; attempt <= CONFIG.retryAttempts; attempt++) {
+                try {
+                    console.log(`📥 Fetching orders attempt ${attempt}/${CONFIG.retryAttempts}...`);
+
+                    // Use raw GitHub content for better performance and caching control
+                    const url = `${CONFIG.rawBase}/${CONFIG.repo}/main/${CONFIG.file}?t=${Date.now()}&v=${Math.random()}`;
+
+                    const response = await Promise.race([
+                        fetch(url, {
+                            method: 'GET',
+                            headers: {
+                                'Cache-Control': 'no-cache, no-store, must-revalidate',
+                                'Pragma': 'no-cache',
+                                'Expires': '0'
+                            }
+                        }),
+                        new Promise((_, reject) => 
+                            setTimeout(() => reject(new Error('Fetch timeout')), CONFIG.timeout)
+                        )
+                    ]);
+
+                    const fetchTime = Math.round(performance.now() - startTime);
+                    stats.responseTimes.push(fetchTime);
+
+                    // Keep only last 20 response times for average calculation
+                    if (stats.responseTimes.length > 20) {
+                        stats.responseTimes = stats.responseTimes.slice(-20);
+                    }
+
+                    if (response.ok) {
+                        const data = await response.json();
+                        stats.successfulFetches++;
+
+                        console.log('✅ Orders fetched successfully in', fetchTime, 'ms');
+
+                        if (data.orders && Array.isArray(data.orders)) {
+                            // Enhanced new order detection
+                            const reallyNewOrders = data.orders.filter(order => 
+                                !seenOrderIds.has(order.id) && 
+                                order.timestamp && 
+                                new Date(order.timestamp) > new Date(Date.now() - (24 * 60 * 60 * 1000)) // Only orders from last 24 hours
+                            );
+
+                            orders = data.orders;
+
+                            // Mark all current orders as seen
+                            data.orders.forEach(order => seenOrderIds.add(order.id));
+
+                            if (reallyNewOrders.length > 0) {
+                                console.log(`🆕 ${reallyNewOrders.length} truly new orders detected`);
+                                showEnhancedNewOrderAlert(reallyNewOrders);
+
+                                // Add enhanced visual feedback for new orders
+                                setTimeout(() => {
+                                    reallyNewOrders.forEach(order => {
+                                        const orderCard = document.querySelector(`[data-order-id="${order.id}"]`);
+                                        if (orderCard) {
+                                            orderCard.classList.add('new');
+                                            // Enhanced animation duration
+                                            setTimeout(() => orderCard.classList.remove('new'), 6000);
+                                        }
+                                    });
+                                }, 300);
+                            }
+
+                            renderOrdersWithEnhancements();
+                            console.log(`📊 Total orders loaded: ${orders.length}`);
+
+                        } else {
+                            console.log('📭 No orders array found in JSON file');
+                            orders = [];
+                            renderOrdersWithEnhancements();
+                        }
+
+                        savePersistedStats();
+                        break; // Success - exit retry loop
+
+                    } else if (response.status === 404) {
+                        console.log('📭 orders.json file not found - waiting for creation');
+                        orders = [];
+                        renderOrdersWithEnhancements();
+                        savePersistedStats();
+
+                        // Show helpful message for first few attempts
+                        if (stats.fetchCount < 8) {
+                            showMessage('📁 Waiting for orders.json file to be created automatically...', 'warning');
+                        }
+                        break; // Don't retry 404s
+
+                    } else if (response.status === 401 || response.status === 403) {
+                        console.error('❌ Authentication error during fetch:', response.status);
+                        stats.failedFetches++;
+                        isTokenValid = false;
+                        systemReady = false;
+                        updateTokenStatus('❌ Token expired or invalid during fetch', 'error');
+                        showMessage('❌ Authentication error during fetch - please refresh page', 'error');
+                        break; // Don't retry auth errors
+
+                    } else if (response.status === 429) {
+                        console.warn('⚠️ Rate limit during fetch - will retry with delay');
+                        stats.failedFetches++;
+                        if (attempt === CONFIG.retryAttempts) {
+                            showMessage('⚠️ Rate limit exceeded - reducing fetch frequency', 'warning');
+                        }
+                        throw new Error('Rate limit - retry with delay');
+
+                    } else {
+                        console.error('❌ HTTP error during fetch:', response.status, response.statusText);
+                        stats.failedFetches++;
+                        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                    }
+
+                } catch (error) {
+                    console.error(`❌ Fetch attempt ${attempt} failed:`, error.message);
+                    stats.failedFetches++;
+
+                    if (attempt === CONFIG.retryAttempts) {
+                        // Final attempt failed
+                        if (error.message.includes('timeout')) {
+                            console.log('⏱️ Final fetch timeout - will try again next cycle');
+                            if (stats.failedFetches > 10) {
+                                showMessage('⚠️ Multiple fetch timeouts - check network connection', 'warning');
+                            }
+                        } else if (!error.message.includes('Rate limit')) {
+                            showMessage(`❌ Fetch error: ${error.message}`, 'error');
+                        }
+                    } else {
+                        // Calculate retry delay with exponential backoff
+                        const delay = error.message.includes('Rate limit') ? 
+                            CONFIG.retryDelay * Math.pow(2, attempt) : 
+                            CONFIG.retryDelay * Math.min(attempt, 3);
+
+                        console.log(`⏳ Retrying fetch in ${delay}ms...`);
+                        await new Promise(resolve => setTimeout(resolve, delay));
+                    }
+                }
+
+                savePersistedStats();
+            }
+        }
+
+        function showEnhancedNewOrderAlert(newOrders) {
+            const alert = document.createElement('div');
+            alert.className = 'new-alert';
+            alert.innerHTML = `
+                <div style="font-size: 1.1rem; font-weight: bold; margin-bottom: 5px;">
+                    🆕 ${newOrders.length} New Order${newOrders.length > 1 ? 's' : ''}!
+                </div>
+                <div style="font-size: 0.9rem; opacity: 0.9;">
+                    ${newOrders.map(o => o.orderNumber || `Order-${o.id.toString().slice(-6)}`).join(', ')}
+                </div>
+                <div style="font-size: 0.8rem; margin-top: 8px; opacity: 0.8;">
+                    Total: $${newOrders.reduce((sum, o) => sum + (o.total || 0), 0).toFixed(2)}
+                </div>
+            `;
+            document.body.appendChild(alert);
+
+            // Enhanced notification sound with fallback
+            try {
+                const audio = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBDOH0fPTgjMGHm7A7+OZURE');
+                audio.volume = 0.3;
+                audio.play().catch(() => {
+                    // Fallback - try system beep
+                    try {
+                        const context = new (window.AudioContext || window.webkitAudioContext)();
+                        const oscillator = context.createOscillator();
+                        const gainNode = context.createGain();
+                        oscillator.connect(gainNode);
+                        gainNode.connect(context.destination);
+                        oscillator.frequency.value = 800;
+                        gainNode.gain.setValueAtTime(0.3, context.currentTime);
+                        gainNode.gain.exponentialRampToValueAtTime(0.01, context.currentTime + 0.5);
+                        oscillator.start(context.currentTime);
+                        oscillator.stop(context.currentTime + 0.5);
+                    } catch (e) {
+                        console.log('Audio notifications not available');
+                    }
+                });
+            } catch (e) {
+                console.log('Audio notification failed');
+            }
+
+            // Enhanced alert removal with fade out
+            setTimeout(() => {
+                if (document.body.contains(alert)) {
+                    alert.style.transition = 'opacity 0.5s ease-out';
+                    alert.style.opacity = '0';
+                    setTimeout(() => {
+                        if (document.body.contains(alert)) {
+                            document.body.removeChild(alert);
+                        }
+                    }, 500);
+                }
+            }, 6000);
+        }
+
+        // ULTIMATE ORDER REMOVAL with comprehensive error handling and retry logic
+        async function removeOrderFromGitHubWithRetry(orderId, action) {
+            if (!isTokenValid || !systemReady) {
+                showMessage('❌ Cannot remove order - authentication not ready', 'error');
+                return false;
+            }
+
+            for (let attempt = 1; attempt <= CONFIG.retryAttempts; attempt++) {
+                try {
+                    console.log(`🗑️ Removing order ${orderId} - attempt ${attempt}/${CONFIG.retryAttempts}`);
+
+                    // Get current file with enhanced error handling
+                    const getResponse = await Promise.race([
+                        fetch(`${CONFIG.apiBase}/repos/${CONFIG.repo}/contents/${CONFIG.file}`, {
+                            method: 'GET',
+                            headers: {
+                                'Authorization': `Bearer ${CONFIG.token}`,
+                                'Accept': 'application/vnd.github+json',
+                                'X-GitHub-Api-Version': '2022-11-28',
+                                'User-Agent': 'BellaVista-Kitchen-Ultimate-v4'
+                            }
+                        }),
+                        new Promise((_, reject) => 
+                            setTimeout(() => reject(new Error('Get file timeout')), CONFIG.timeout)
+                        )
+                    ]);
+
+                    if (!getResponse.ok) {
+                        if (getResponse.status === 401) {
+                            isTokenValid = false;
+                            systemReady = false;
+                            updateTokenStatus('❌ Token expired during operation', 'error');
+                            throw new Error('Authentication failed during file retrieval');
+                        } else if (getResponse.status === 404) {
+                            throw new Error('Orders file not found');
+                        } else if (getResponse.status === 409) {
+                            console.warn('⚠️ File conflict detected, retrying...');
+                            throw new Error('File conflict - will retry');
+                        }
+                        throw new Error(`Failed to get orders file: ${getResponse.status}`);
+                    }
+
+                    const fileData = await getResponse.json();
+                    const currentData = JSON.parse(atob(fileData.content));
+
+                    // Enhanced order finding and removal
+                    const originalOrderCount = currentData.orders ? currentData.orders.length : 0;
+                    const filteredOrders = currentData.orders ? 
+                        currentData.orders.filter(order => order.id != orderId) : [];
+
+                    if (filteredOrders.length === originalOrderCount) {
+                        throw new Error('Order not found in GitHub file - may have been already removed');
+                    }
+
+                    console.log(`📝 Removing order from GitHub: ${originalOrderCount} → ${filteredOrders.length} orders`);
+
+                    // Create comprehensive updated content with enhanced metadata
+                    const updatedData = {
+                        ...currentData,
+                        lastUpdated: new Date().toISOString(),
+                        totalOrders: filteredOrders.length,
+                        lastAction: {
+                            type: action,
+                            orderId: orderId,
+                            timestamp: new Date().toISOString(),
+                            removedBy: 'kitchen-ultimate-system-v4',
+                            attempt: attempt,
+                            tokenHash: CONFIG.token.substring(0, 12) + '...'
+                        },
+                        stats: {
+                            ...currentData.stats,
+                            lastRemoval: new Date().toISOString(),
+                            totalRemovals: (currentData.stats?.totalRemovals || 0) + 1,
+                            removalsByAction: {
+                                ...currentData.stats?.removalsByAction,
+                                [action]: (currentData.stats?.removalsByAction?.[action] || 0) + 1
+                            }
+                        },
+                        orders: filteredOrders
+                    };
+
+                    // Enhanced commit to GitHub
+                    const commitData = {
+                        message: `Kitchen: Order ${action} and permanently removed [Ultimate v4.0 - Attempt ${attempt}]`,
+                        content: btoa(JSON.stringify(updatedData, null, 2)),
+                        sha: fileData.sha,
+                        branch: 'main'
+                    };
+
+                    const commitResponse = await Promise.race([
+                        fetch(`${CONFIG.apiBase}/repos/${CONFIG.repo}/contents/${CONFIG.file}`, {
+                            method: 'PUT',
+                            headers: {
+                                'Authorization': `Bearer ${CONFIG.token}`,
+                                'Accept': 'application/vnd.github+json',
+                                'X-GitHub-Api-Version': '2022-11-28',
+                                'Content-Type': 'application/json',
+                                'User-Agent': 'BellaVista-Kitchen-Ultimate-v4'
+                            },
+                            body: JSON.stringify(commitData)
+                        }),
+                        new Promise((_, reject) => 
+                            setTimeout(() => reject(new Error('Commit timeout')), CONFIG.timeout)
+                        )
+                    ]);
+
+                    if (commitResponse.ok) {
+                        const commitResult = await commitResponse.json();
+                        console.log('✅ Order successfully removed from GitHub');
+                        console.log('📝 Commit details:', {
+                            sha: commitResult.commit.sha,
+                            attempt: attempt,
+                            action: action
+                        });
+                        return true;
+                    } else if (commitResponse.status === 401) {
+                        isTokenValid = false;
+                        systemReady = false;
+                        updateTokenStatus('❌ Token expired during commit', 'error');
+                        throw new Error('Authentication failed during commit');
+                    } else if (commitResponse.status === 409) {
+                        console.warn('⚠️ Commit conflict detected, retrying...');
+                        throw new Error('Commit conflict - will retry');
+                    } else {
+                        const error = await commitResponse.json();
+                        console.error('❌ GitHub commit failed:', error);
+                        throw new Error(error.message || `Commit failed: ${commitResponse.status}`);
+                    }
+
+                } catch (error) {
+                    console.error(`❌ Remove attempt ${attempt} failed:`, error.message);
+
+                    if (attempt === CONFIG.retryAttempts) {
+                        // Final attempt failed
+                        console.error('❌ All removal attempts failed');
+                        return false;
+                    } else {
+                        // Calculate retry delay with exponential backoff
+                        const delay = error.message.includes('conflict') || error.message.includes('Commit conflict') ? 
+                            CONFIG.retryDelay * Math.pow(1.5, attempt) : 
+                            CONFIG.retryDelay * attempt;
+
+                        console.log(`⏳ Retrying removal in ${delay}ms...`);
+                        await new Promise(resolve => setTimeout(resolve, delay));
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        // Enhanced order completion with comprehensive feedback
+        async function completeOrder(orderId) {
+            const order = orders.find(o => o.id == orderId);
+            if (!order) {
+                showMessage('❌ Order not found in local cache', 'error');
+                return;
+            }
+
+            const btn = event.target;
+            const originalText = btn.textContent;
+            btn.disabled = true;
+            btn.textContent = 'PROCESSING...';
+
+            const card = btn.closest('.order-card');
+            if (card) card.classList.add('removing');
+
+            const success = await removeOrderFromGitHubWithRetry(orderId, 'completed');
+
+            if (success) {
+                stats.completed++;
+                stats.removed++;
+                savePersistedStats();
+
+                // Remove from local orders and seen IDs
+                orders = orders.filter(o => o.id != orderId);
+                seenOrderIds.delete(orderId);
+
+                showMessage(`✅ Order ${order.orderNumber || `#${orderId.toString().slice(-6)}`} completed and permanently removed!`, 'success');
+
+                // Enhanced visual feedback with delayed re-render
+                setTimeout(() => {
+                    renderOrdersWithEnhancements();
+                }, 1000);
+            } else {
+                // Reset button state on failure
+                btn.disabled = false;
+                btn.textContent = originalText;
+                if (card) card.classList.remove('removing');
+                showMessage('❌ Failed to remove order from GitHub - please try again', 'error');
+            }
+        }
+
+        // Enhanced order cancellation with confirmation
+        async function cancelOrder(orderId) {
+            const order = orders.find(o => o.id == orderId);
+            if (!order) {
+                showMessage('❌ Order not found in local cache', 'error');
+                return;
+            }
+
+            // Enhanced confirmation dialog
+            const orderNumber = order.orderNumber || `#${orderId.toString().slice(-6)}`;
+            const confirmed = confirm(
+                `Cancel and permanently remove order ${orderNumber}?\n\n` +
+                `Total: $${order.total ? order.total.toFixed(2) : '0.00'}\n` +
+                `Items: ${order.items ? order.items.length : 0}\n\n` +
+                `This action cannot be undone.`
+            );
+
+            if (!confirmed) return;
+
+            const btn = event.target;
+            const originalText = btn.textContent;
+            btn.disabled = true;
+            btn.textContent = 'PROCESSING...';
+
+            const card = btn.closest('.order-card');
+            if (card) card.classList.add('removing');
+
+            const success = await removeOrderFromGitHubWithRetry(orderId, 'canceled');
+
+            if (success) {
+                stats.removed++;
+                savePersistedStats();
+
+                // Remove from local orders and seen IDs
+                orders = orders.filter(o => o.id != orderId);
+                seenOrderIds.delete(orderId);
+
+                showMessage(`✅ Order ${orderNumber} canceled and permanently removed!`, 'success');
+
+                // Enhanced visual feedback with delayed re-render
+                setTimeout(() => {
+                    renderOrdersWithEnhancements();
+                }, 1000);
+            } else {
+                // Reset button state on failure
+                btn.disabled = false;
+                btn.textContent = originalText;
+                if (card) card.classList.remove('removing');
+                showMessage('❌ Failed to remove order from GitHub - please try again', 'error');
+            }
+        }
+
+        function updateOrderStatus(orderId, status) {
+            const order = orders.find(o => o.id == orderId);
+            if (order) {
+                order.status = status;
+                order.lastUpdated = new Date().toISOString();
+                order.statusHistory = order.statusHistory || [];
+                order.statusHistory.push({
+                    status: status,
+                    timestamp: new Date().toISOString(),
+                    updatedBy: 'kitchen-ultimate-v4'
+                });
+                renderOrdersWithEnhancements();
+                showMessage(`Order ${order.orderNumber || `#${orderId.toString().slice(-6)}`} status updated to ${status}`, 'success');
+            }
+        }
+
+        function renderOrdersWithEnhancements() {
+            const container = document.getElementById('orders-grid');
+
+            if (!container) return;
+
+            if (orders.length === 0) {
+                const statusMsg = isTokenValid && systemReady
+                    ? (stats.fetchCount > 0 ? 'No orders found in system' : 'Waiting for first order fetch...')
+                    : 'Authentication required to process orders';
+
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">🍳</div>
+                        <h3 class="empty-title">Kitchen Status</h3>
+                        <p class="empty-description">
+                            ${statusMsg}<br>
+                            <small>Auto-monitoring: ${isAutoMonitoring ? 'ON' : 'OFF'} • Ultimate system v4.0 active</small>
+                        </p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Enhanced sorting with multiple criteria
+            const sortedOrders = [...orders].sort((a, b) => {
+                // Priority: new orders first, then by timestamp
+                const aIsNew = !seenOrderIds.has(a.id) || (Date.now() - new Date(a.timestamp).getTime() < 300000); // 5 minutes
+                const bIsNew = !seenOrderIds.has(b.id) || (Date.now() - new Date(b.timestamp).getTime() < 300000);
+
+                if (aIsNew && !bIsNew) return -1;
+                if (!aIsNew && bIsNew) return 1;
+
+                return new Date(b.timestamp) - new Date(a.timestamp);
+            });
+
+            container.innerHTML = sortedOrders.map(order => `
+                <div class="order-card" data-order-id="${order.id}">
+                    <div class="order-header">
+                        <div class="order-number">${order.orderNumber || `Order-${order.id.toString().slice(-6)}`}</div>
+                        <div class="order-time">
+                            <div style="font-weight: 600;">${new Date(order.timestamp).toLocaleTimeString()}</div>
+                            <div style="font-size: 0.8rem; margin-top: 2px; color: #888;">
+                                ${new Date(order.timestamp).toLocaleDateString()}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="order-items">
+                        ${order.items ? order.items.map(item => `
+                            <div class="order-item">
+                                <div class="item-info">
+                                    <div class="item-name">${item.name || 'Unknown Item'}</div>
+                                    <div class="item-details">
+                                        Quantity: ${item.quantity || 1} × $${(item.price || 0).toFixed(2)} 
+                                        ${item.total ? `= $${item.total.toFixed(2)}` : ''}
+                                    </div>
+                                </div>
+                                <div class="item-total">$${((item.quantity || 1) * (item.price || 0)).toFixed(2)}</div>
+                            </div>
+                        `).join('') : '<div class="order-item"><div class="item-info">No items found</div></div>'}
+                    </div>
+
+                    <div class="order-total">
+                        <span class="total-label">Order Total:</span>
+                        <span class="total-amount">$${(order.total || 0).toFixed(2)}</span>
+                    </div>
+
+                    <div class="order-actions">
+                        <button class="status-btn status-${order.status || 'pending'}">${getStatusLabel(order.status || 'pending')}</button>
+                        ${getStatusActionButtons(order)}
+                        <button class="action-btn success" onclick="completeOrder('${order.id}')" ${!isTokenValid ? 'disabled' : ''}>
+                            ✅ Complete & Remove
+                        </button>
+                        <button class="action-btn danger" onclick="cancelOrder('${order.id}')" ${!isTokenValid ? 'disabled' : ''}>
+                            ❌ Cancel & Remove
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+
+            updateStatsDisplay();
+        }
+
+        function getStatusLabel(status) {
+            const statusMap = {
+                'pending': 'Pending',
+                'preparing': 'Preparing', 
+                'ready': 'Ready',
+                'completed': 'Completed'
+            };
+            return statusMap[status] || status.charAt(0).toUpperCase() + status.slice(1);
+        }
+
+        function getStatusActionButtons(order) {
+            const status = order.status || 'pending';
+            switch (status) {
+                case 'pending':
+                    return `<button class="action-btn primary" onclick="updateOrderStatus('${order.id}', 'preparing')">🔥 Start Cooking</button>`;
+                case 'preparing':
+                    return `<button class="action-btn primary" onclick="updateOrderStatus('${order.id}', 'ready')">🍽️ Mark Ready</button>`;
+                case 'ready':
+                    return `<button class="action-btn primary" onclick="updateOrderStatus('${order.id}', 'completed')">📋 Complete Order</button>`;
+                default:
+                    return '';
+            }
+        }
+
+        function updateStatsDisplay() {
+            const successRate = stats.fetchCount > 0 ? 
+                Math.round((stats.successfulFetches / stats.fetchCount) * 100) : 100;
+            const avgResponse = stats.responseTimes.length > 0 ?
+                Math.round(stats.responseTimes.reduce((a, b) => a + b, 0) / stats.responseTimes.length) : 0;
+
+            document.getElementById('total-orders').textContent = orders.length;
+            document.getElementById('active-orders').textContent = 
+                orders.filter(o => (o.status || 'pending') !== 'completed').length;
+            document.getElementById('completed-orders').textContent = stats.completed;
+            document.getElementById('removed-orders').textContent = stats.removed;
+            document.getElementById('fetch-count').textContent = stats.fetchCount;
+            document.getElementById('success-rate').textContent = `${successRate}%`;
+            document.getElementById('avg-response').textContent = `${avgResponse}ms`;
+        }
+
+        // Enhanced control functions
+        function toggleAutoMonitoring() {
+            isAutoMonitoring = !isAutoMonitoring;
+            const btn = document.getElementById('auto-btn');
+            btn.textContent = `⏸️ Auto: ${isAutoMonitoring ? 'ON' : 'OFF'}`;
+            btn.style.background = isAutoMonitoring ? '#17a2b8' : '#28a745';
+
+            if (isAutoMonitoring && isTokenValid && systemReady) {
+                startEnhancedMonitoring();
+                showMessage('Auto-monitoring enabled - enhanced real-time updates active', 'success');
+            } else {
+                if (autoInterval) clearInterval(autoInterval);
+                showMessage('Auto-monitoring disabled - manual refresh only', 'success');
+            }
+        }
+
+        function markAllAsRead() {
+            document.querySelectorAll('.order-card').forEach(card => {
+                card.classList.remove('new');
+            });
+            showMessage('All orders marked as read', 'success');
+        }
+
+        function clearLocalDisplay() {
+            if (confirm('Clear local display?\n\nOrders remain in GitHub until completed/canceled.\nThis only clears the local view.')) {
+                orders = [];
+                seenOrderIds.clear();
+                renderOrdersWithEnhancements();
+                showMessage('Local display cleared - orders remain in GitHub', 'success');
+            }
+        }
+
+        async function testSystemConnection() {
+            showMessage('Testing system connection...', 'warning');
+
+            try {
+                const startTime = performance.now();
+
+                // Test 1: Repository access
+                const repoResponse = await Promise.race([
+                    fetch(`${CONFIG.apiBase}/repos/${CONFIG.repo}`, {
+                        headers: {
+                            'Authorization': `Bearer ${CONFIG.token}`,
+                            'Accept': 'application/vnd.github+json',
+                            'X-GitHub-Api-Version': '2022-11-28'
+                        }
+                    }),
+                    new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), 10000))
+                ]);
+
+                const repoTime = Math.round(performance.now() - startTime);
+
+                if (repoResponse.ok) {
+                    // Test 2: File access
+                    const fileResponse = await fetch(`${CONFIG.apiBase}/repos/${CONFIG.repo}/contents/${CONFIG.file}`, {
+                        headers: {
+                            'Authorization': `Bearer ${CONFIG.token}`,
+                            'Accept': 'application/vnd.github+json',
+                            'X-GitHub-Api-Version': '2022-11-28'
+                        }
+                    });
+
+                    const totalTime = Math.round(performance.now() - startTime);
+
+                    if (fileResponse.ok) {
+                        showMessage(`✅ System test successful - Repository: ${repoTime}ms, File: ${totalTime}ms`, 'success');
+                    } else if (fileResponse.status === 404) {
+                        showMessage(`✅ Repository connection successful (${repoTime}ms) - orders.json will be created automatically`, 'success');
+                    } else {
+                        showMessage(`⚠️ Repository OK (${repoTime}ms) but file access failed: ${fileResponse.status}`, 'warning');
+                    }
+                } else {
+                    showMessage(`❌ Repository connection failed: ${repoResponse.status}`, 'error');
+                }
+            } catch (error) {
+                showMessage(`❌ Connection test error: ${error.message}`, 'error');
+            }
+        }
+
+        function showMessage(text, type) {
+            const msg = document.getElementById('message');
+            if (!msg) return;
+
+            msg.textContent = text;
+            msg.className = `message ${type}`;
+            msg.style.display = 'block';
+
+            // Enhanced auto-hide with different durations based on type
+            const duration = type === 'error' ? 8000 : type === 'warning' ? 6000 : 5000;
+            setTimeout(() => { 
+                msg.style.display = 'none'; 
+            }, duration);
+        }
+
+        // Global function assignments for HTML onclick handlers
+        window.completeOrder = completeOrder;
+        window.cancelOrder = cancelOrder;
+        window.updateOrderStatus = updateOrderStatus;
+        window.fetchOrdersWithRetry = fetchOrdersWithRetry;
+        window.toggleAutoMonitoring = toggleAutoMonitoring;
+        window.markAllAsRead = markAllAsRead;
+        window.clearLocalDisplay = clearLocalDisplay;
+        window.testSystemConnection = testSystemConnection;
+
+        // Enhanced cleanup on page unload
+        window.addEventListener('beforeunload', () => {
+            if (autoInterval) clearInterval(autoInterval);
+            savePersistedStats();
+        });
+
+        console.log('✅ Ultimate kitchen system loaded successfully!');
+        console.log('🔑 Token configured:', CONFIG.token.substring(0, 12) + '...');
+        console.log('⚙️ Enhanced configuration:', {
+            version: '4.0-ultimate',
+            timeout: CONFIG.timeout + 'ms',
+            retries: CONFIG.retryAttempts,
+            polling: CONFIG.pollInterval + 'ms',
+            features: ['enhanced-retry', 'exponential-backoff', 'rate-limit-handling', 'conflict-resolution']
+        });
+    </script>
+</body>
+</html>
